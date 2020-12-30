@@ -21,16 +21,17 @@ shared_ptr<Expr> Parser::parsePrecedence(Precedence precedence)
     }
     auto left = prefixes[op]->parse(*this, previous());
 
-    while (precedence <= infixes[peek().type]->getPrecedence()) {
+    while (peek().type != TOKEN_EOF && precedence <= infixes[peek().type]->getPrecedence()) {
         Token op1 = peek();
         advance(); // skip op
-        left = infixes[peek().type]->parse(*this, left, op1);
+        left = infixes[op1.type]->parse(*this, left, op1);
     }
 
     return left;
 }
 
-Parser::Parser(std::vector<Token>&& tokens):tokens(tokens){
+void Parser::loadParselets()
+{
     record(TOKEN_NUM, std::make_shared<NumberParselet>());
 
     prefix(TOKEN_PLUS, PREC_UNARY);
@@ -45,7 +46,12 @@ Parser::Parser(std::vector<Token>&& tokens):tokens(tokens){
     infixRight(TOKEN_CARET, PREC_EXPONENT);
 }
 
+Parser::Parser(std::vector<Token>&& tokens):tokens(tokens){
+    loadParselets();
+}
+
 void Parser::advance() {
+    if(current + 1 >= tokens.size()) return;
     ++current;
 }
 
@@ -75,10 +81,6 @@ Token &Parser::next() {
     return tokens.at(current+1);
 }
 
-void Parser::record(TokenType type, shared_ptr<PrefixOpParselet>& parselet)
-{
-    prefixes[type] = parselet;
-}
 
 void Parser::record(TokenType type, shared_ptr<InfixParselet>&& parselet)
 {
@@ -119,5 +121,20 @@ void Parser::error(Token token, std::string &&msg)
 {
     std::cerr << msg << '\n';
     hasErr = true;
+}
+
+Parser::Parser(std::vector<Token> &tokens):tokens(tokens) {
+    loadParselets();
+}
+
+shared_ptr<Expr> Parser::run()
+{
+    auto ast = parsePrecedence(PREC_ASSIGN);
+    auto* binary = (Binary*)ast.get();
+    return ast;
+}
+
+void Parser::record(TokenType type, shared_ptr<PrefixParselet> &parselet) {
+    prefixes[type] = parselet;
 }
 

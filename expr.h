@@ -7,11 +7,11 @@
 
 using std::shared_ptr;
 
-template <class R>
+
 class Visitor;
 class Expr {
-    template <class R>
-    R accept(Visitor<R> v);
+public:
+    virtual void accept(Visitor& v) = 0;
 };
 
 class Assign:public Expr {
@@ -20,11 +20,8 @@ public:
         this->name = name;
         this->newVal = newVal;
     }
-    
-    template <class R>
-    R accept(Visitor<R> v) {
-        return v.visitAssign(this);
-    }
+
+    void accept(Visitor& v);
 
     Token name;
     shared_ptr<Expr> newVal;
@@ -37,11 +34,8 @@ public:
         this->op = op;
         this->right = right;
     }
-    
-    template <class R>
-    R accept(Visitor<R> v) {
-        return v.visitBinary(this);
-    }
+
+    void accept(Visitor& v) override;
     
     shared_ptr<Expr> left;
     Token op;
@@ -54,11 +48,8 @@ public:
         this->op = op;
         this->expr = expr;
     }
-    
-    template <class R>
-    R accept(Visitor<R> v) {
-        return v.visitUnary(this);
-    }
+
+    void accept(Visitor& v) override;
     
     Token op;
     shared_ptr<Expr> expr;
@@ -66,69 +57,48 @@ public:
 
 class Grouping:public Expr {
 public:
-    Grouping(shared_ptr<Expr>& expr)    {
+    explicit Grouping(shared_ptr<Expr>& expr)    {
         this->expr = expr;
     }
-    
-    template <class R>
-    R accept(Visitor<R> v) {
-        return v.visitGrouping(this);
-    }
+
+    void accept(Visitor& v) override;
     
     shared_ptr<Expr> expr;
 };
 
 class Number:public Expr {
 public:
-    Number(Token &token): token(token){}
-    
-    template <class R>
-    R accept(Visitor<R> v) {
-        return v.visitNumber(this);
-    }
-    
+    explicit Number(Token &token): token(token){}
+
+    void accept(Visitor& v) override ;
+
     Token token;
 };
 
 class Variable:public Expr {
 public:
-    Variable(Token& var)    {
+    explicit Variable(Token& var)    {
         this->var = var;
     }
-    
-    template <class R>
-    R accept(Visitor<R> v) {
-        return v.visitVariable(this);
-    }
+
+    void accept(Visitor& v)override;
     
     Token var;
 };
 
 class Conditional:public Expr {
+public:
     Conditional(shared_ptr<Expr>& cond, shared_ptr<Expr>& thenExpr, shared_ptr<Expr>& elseExpr)    {
         this->cond = cond;
         this->thenExpr = thenExpr;
         this->elseExpr = elseExpr;
     }
-    
-    template <class R>
-    R accept(Visitor<R> v) {
-        return v.visitConditional(this);
-    }
+
+    void accept(Visitor& v)override;
     
     shared_ptr<Expr> cond;
     shared_ptr<Expr> thenExpr;
     shared_ptr<Expr> elseExpr;
 };
 
-template <class R>
-class Visitor {
-    virtual R visitAssign(Assign &expr) = 0;
-    virtual R visitBinary(Binary &expr) = 0;
-    virtual R visitUnary(Unary &expr) = 0;
-    virtual R visitGrouping(Grouping &expr) = 0;
-    virtual R visitNumber(Number &expr) = 0;
-    virtual R visitVariable(Variable &expr) = 0;
-    virtual R visitConditional(Conditional &expr) = 0;
-};
 #endif //PRATTPARSER_EXPR_H

@@ -42,14 +42,21 @@ enum TokenType {
 };
 
 struct Token {
-    Token(TokenType type, const char *start, int length)
-    : type(type), start(start), length(length){}
+//    Token(TokenType type, const char *start, int length)
+//    : type(type), start(start), length(length){}
+    Token(TokenType type, std::string& s): type(type), lexeme(s)
+    {}
+    Token(TokenType type, std::string&& s): type(type), lexeme(s)
+    {}
+
+//    Token(TokenType type): type(type)
+//    {}
 
     Token()=default;
 
     TokenType type;
-//    std::string lexeme;
-    const char *start;
-    int length;
+    std::string lexeme;
+//    const char *start;
+//    int length;
 };
 #endif //PRATTPARSER_TOKEN_H

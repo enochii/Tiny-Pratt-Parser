@@ -14,9 +14,13 @@
 
 class Parser {
 public:
-    Parser(std::vector<Token>&& tokens);
+    explicit Parser(std::vector<Token>&& tokens);
+    explicit Parser(std::vector<Token>& tokens);
     shared_ptr<struct Expr> parsePrecedence(Precedence precedence);
 
+    shared_ptr<Expr> run();
+
+private:
     void advance();
     void consume(TokenType type, std::string &msg);
     bool match(TokenType type);
@@ -24,7 +28,7 @@ public:
     Token& peek();
     Token& next();
 
-    void record(TokenType type, shared_ptr<PrefixOpParselet>& parselet);
+    void record(TokenType type, shared_ptr<PrefixParselet>& parselet);
     void record(TokenType type, shared_ptr<InfixParselet>& parselet);
 
     void prefix(TokenType type, Precedence prec);
@@ -33,7 +37,6 @@ public:
     void infixLeft(TokenType type, Precedence prec);
     void infixRight(TokenType type, Precedence prec);
 
-private:
 //    Token current_;
 //    Token previous_;
     bool hasErr = false;
@@ -50,6 +53,8 @@ private:
     void record(TokenType type, shared_ptr<PrefixParselet> &&parselet);
 
     void error(Token token, std::string &&msg);
+
+    void loadParselets();
 };
 
 #endif //PRATTPARSER_PARSER_H
