@@ -16,7 +16,7 @@ enum Precedence {
     PREC_FACTOR,
     PREC_EXPONENT,
     PREC_UNARY,
-    PREC_GROUPING
+//    PREC_GROUPING
 };
 
 enum Associativity {

@@ -20,14 +20,10 @@ class InfixParselet {
 public:
     virtual shared_ptr<Expr> parse(Parser& parser, shared_ptr<Expr>& left, Token op) = 0;
 
-    InfixParselet(Precedence prec, Associativity assoc):
-    precedence(prec), associativity(assoc){}
+//    InfixParselet(Precedence prec, Associativity assoc):
+//    precedence(prec), associativity(assoc){}
 
-    Precedence getPrecedence();
-
-protected:
-    Precedence precedence;
-    Associativity associativity;
+    virtual Precedence getPrecedence() = 0;
 };
 
 class PrefixOpParselet: public PrefixParselet {
@@ -41,24 +37,36 @@ protected:
 
 class GroupingParselet: public PrefixParselet {
 public:
-    GroupingParselet(){}
-
     shared_ptr<Expr> parse(Parser& parser, Token &op)override;
 };
 
 class BinaryOpParselet: public InfixParselet {
 public:
     BinaryOpParselet(Precedence prec, Associativity assoc):
-        InfixParselet(prec, assoc){}
+            precedence(prec), associativity(assoc){}
 
     shared_ptr<Expr> parse(Parser& parser, shared_ptr<Expr>& left, Token op)override;
+
+    Precedence getPrecedence()override;
+private:
+    Precedence precedence;
+    Associativity associativity;
 };
 
 class NumberParselet: public PrefixParselet {
 public:
-    NumberParselet(){}
-
     shared_ptr<Expr> parse(Parser& parser, Token &op)override;
 };
 
+class ConditionalParselet: public InfixParselet {
+public:
+    shared_ptr<Expr> parse(Parser& parser, shared_ptr<Expr>& left, Token op) override;
+
+    Precedence getPrecedence() override;
+};
+
+class VariableParselet: public PrefixParselet {
+public:
+    shared_ptr<Expr> parse(Parser& parser, Token &op)override;
+};
 #endif //PRATTPARSER_PARSELETS_H

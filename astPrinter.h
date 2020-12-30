@@ -57,11 +57,11 @@ public:
     }
 
     Res visitConditional(Conditional &expr) override {
-        std::cout << "(if " ;
+        std::cout << "(" ;
         stringify(expr.cond);
-        std::cout << " ";
+        std::cout << " ? ";
         stringify(expr.thenExpr);
-        std::cout << " ";
+        std::cout << " : ";
         stringify(expr.elseExpr);
         std::cout << ")";
     }

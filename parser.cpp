@@ -33,7 +33,9 @@ shared_ptr<Expr> Parser::parsePrecedence(Precedence precedence)
 void Parser::loadParselets()
 {
     record(TOKEN_NUM, std::make_shared<NumberParselet>());
+    record(TOKEN_ID, std::make_shared<VariableParselet>());
     record(TOKEN_LEFT_PAREN, std::make_shared<GroupingParselet>());
+    record(TOKEN_QUESTION, std::make_shared<ConditionalParselet>());
 
     prefix(TOKEN_PLUS, PREC_UNARY);
     prefix(TOKEN_MINUS, PREC_UNARY);

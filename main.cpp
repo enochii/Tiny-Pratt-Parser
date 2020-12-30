@@ -25,6 +25,11 @@ int main() {
     test("1 + 4 * 3 + !2 / 2^-1");
     test("!!!3");
     test("(1+2)*3");
+    test("a?b:c");
+
+    test("a ? b : c ? d : e"); // "(a ? b : (c ? d : e))"
+    test("a ? b ? c : d : e"); //"(a ? (b ? c : d) : e)")
+    test("a + b ? c * d : e / f");// "((a + b) ? (c * d) : (e / f))"
 
     return 0;
 }
