@@ -16,13 +16,13 @@ class Parser {
 public:
     explicit Parser(std::vector<Token>&& tokens);
     explicit Parser(std::vector<Token>& tokens);
-    shared_ptr<struct Expr> parsePrecedence(Precedence precedence);
+    shared_ptr<Expr> parsePrecedence(Precedence precedence);
 
     shared_ptr<Expr> run();
 
+    void consume(TokenType type, std::string &&msg);
 private:
     void advance();
-    void consume(TokenType type, std::string &msg);
     bool match(TokenType type);
     Token& previous();
     Token& peek();
@@ -49,12 +49,12 @@ private:
     std::unordered_map<TokenType, shared_ptr<InfixParselet>> infixes;
 
     void record(TokenType type, shared_ptr<InfixParselet> &&parselet);
-
     void record(TokenType type, shared_ptr<PrefixParselet> &&parselet);
 
     void error(Token token, std::string &&msg);
 
     void loadParselets();
+    Precedence getCurrentPrecedence();
 };
 
 #endif //PRATTPARSER_PARSER_H

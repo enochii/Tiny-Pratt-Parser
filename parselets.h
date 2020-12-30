@@ -39,6 +39,13 @@ protected:
     Precedence precedence;
 };
 
+class GroupingParselet: public PrefixParselet {
+public:
+    GroupingParselet(){}
+
+    shared_ptr<Expr> parse(Parser& parser, Token &op)override;
+};
+
 class BinaryOpParselet: public InfixParselet {
 public:
     BinaryOpParselet(Precedence prec, Associativity assoc):

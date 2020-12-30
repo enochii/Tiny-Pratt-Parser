@@ -23,3 +23,10 @@ shared_ptr<Expr> NumberParselet::parse(Parser &parser, Token& op) {
 Precedence InfixParselet::getPrecedence() {
     return precedence;
 }
+
+shared_ptr<Expr> GroupingParselet::parse(Parser &parser, Token &op) {
+    // "(" already eaten
+    auto expr = parser.parsePrecedence(PREC_ASSIGN);
+    parser.consume(TOKEN_RIGHT_PAREN, "Expect a ')'");
+    return std::make_shared<Grouping>(expr);
+}

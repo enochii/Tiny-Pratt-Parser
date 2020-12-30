@@ -14,12 +14,12 @@
 
 class Lexer {
 public:
-    Lexer(std::string &s): source(s)
+    explicit Lexer(std::string &s): source(s)
     {
         run();
     }
 
-    Lexer(std::string &&s): source(s)
+    explicit Lexer(std::string &&s): source(s)
     {
         run();
     }
@@ -49,6 +49,11 @@ private:
                     addToken(TOKEN_BANG);break;
                 case '^':
                     addToken(TOKEN_CARET);break;
+                case '(':
+                    addToken(TOKEN_LEFT_PAREN);break;
+                case ')':
+                    addToken(TOKEN_RIGHT_PAREN);break;
+
                 default:
                     if(isAlpha(c)) {
                         identifier();
@@ -64,9 +69,11 @@ private:
         start = current; //
         addToken(TOKEN_EOF);
 
-//        for(Token &token:tokens) {
-//            std::cout << "[" << token.lexeme << "]";
-//        }
+        std::cout << "tokens: ";
+        for(Token &token:tokens) {
+            std::cout << "[" << token.lexeme << "]";
+        }
+        std::cout << "\n";
     }
 
     void addToken(TokenType type)

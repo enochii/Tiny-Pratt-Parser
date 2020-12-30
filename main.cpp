@@ -24,5 +24,7 @@ int main() {
 //    std::cout << "Hello, World!" << std::endl;
     test("1 + 4 * 3 + !2 / 2^-1");
     test("!!!3");
+    test("(1+2)*3");
+
     return 0;
 }

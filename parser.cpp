@@ -21,7 +21,7 @@ shared_ptr<Expr> Parser::parsePrecedence(Precedence precedence)
     }
     auto left = prefixes[op]->parse(*this, previous());
 
-    while (peek().type != TOKEN_EOF && precedence <= infixes[peek().type]->getPrecedence()) {
+    while (precedence <= getCurrentPrecedence()) {
         Token op1 = peek();
         advance(); // skip op
         left = infixes[op1.type]->parse(*this, left, op1);
@@ -33,6 +33,7 @@ shared_ptr<Expr> Parser::parsePrecedence(Precedence precedence)
 void Parser::loadParselets()
 {
     record(TOKEN_NUM, std::make_shared<NumberParselet>());
+    record(TOKEN_LEFT_PAREN, std::make_shared<GroupingParselet>());
 
     prefix(TOKEN_PLUS, PREC_UNARY);
     prefix(TOKEN_MINUS, PREC_UNARY);
@@ -55,7 +56,7 @@ void Parser::advance() {
     ++current;
 }
 
-void Parser::consume(TokenType type, std::string &msg) {
+void Parser::consume(TokenType type, std::string &&msg) {
     if(!match(type)) {
         std::cerr << msg << '\n';
     }
@@ -136,5 +137,13 @@ shared_ptr<Expr> Parser::run()
 
 void Parser::record(TokenType type, shared_ptr<PrefixParselet> &parselet) {
     prefixes[type] = parselet;
+}
+
+Precedence Parser::getCurrentPrecedence() {
+    auto it = infixes.find(peek().type);
+    if(it != infixes.end()) {
+        return it->second->getPrecedence();
+    }
+    return PREC_NONE;
 }
 
