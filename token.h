@@ -10,7 +10,7 @@
 enum Precedence {
     PREC_NONE,
     PREC_ASSIGN,
-    PREC_COLON, // a?b?c:d:f
+//    PREC_COLON, // a?b?c:d:f
     PREC_QUESTION,
     PREC_TERM,
     PREC_FACTOR,
