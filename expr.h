@@ -12,14 +12,17 @@ class Visitor;
 class Expr {
 public:
     virtual void accept(Visitor& v) = 0;
-    virtual ~Expr()=0;
+
+protected:
+//    virtual ~Expr()=0;
+    ~Expr();
 };
 
 class Assign:public Expr {
 public:
     Assign(Token& name, shared_ptr<Expr>& newVal);
     void accept(Visitor& v) override;
-    ~Assign() override = default;
+    ~Assign()  = default;
 
     Token name;
     shared_ptr<Expr> newVal;
@@ -29,7 +32,7 @@ class Binary:public Expr {
 public:
     Binary(shared_ptr<Expr>& left, Token& op, shared_ptr<Expr>& right);
     void accept(Visitor& v) override;
-    ~Binary() override = default;
+    ~Binary()  = default;
     
     shared_ptr<Expr> left;
     Token op;
@@ -40,7 +43,7 @@ class Unary:public Expr {
 public:
     Unary(Token& op, shared_ptr<Expr>& expr);
     void accept(Visitor& v) override;
-    ~Unary() override = default;
+    ~Unary()  = default;
     
     Token op;
     shared_ptr<Expr> expr;
@@ -59,7 +62,7 @@ class Number:public Expr {
 public:
     explicit Number(Token &token);
     void accept(Visitor& v) override ;
-    ~Number() override = default;
+    ~Number()  = default;
 
     Token token;
 };
@@ -68,7 +71,7 @@ class Variable:public Expr {
 public:
     explicit Variable(Token& var);
     void accept(Visitor& v)override;
-    ~Variable() override = default;
+    ~Variable()  = default;
 
     Token var;
 };
@@ -77,7 +80,7 @@ class Conditional:public Expr {
 public:
     Conditional(shared_ptr<Expr>& cond, shared_ptr<Expr>& thenExpr, shared_ptr<Expr>& elseExpr);
     void accept(Visitor& v)override;
-    ~Conditional() override = default;
+    ~Conditional()  = default;
     
     shared_ptr<Expr> cond;
     shared_ptr<Expr> thenExpr;

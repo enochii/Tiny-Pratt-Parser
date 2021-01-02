@@ -31,6 +31,7 @@ int main() {
     test("a ? b ? c : d : e"); //"(a ? (b ? c : d) : e)")
     test("a + b ? c * d : e / f");// "((+ a b) ? (* c d) : (/ e f))"
 
-//    test("a = 3"); // not supported now
+    test("a = b = 3");
+//    test("a = 3 = 2"); // this one will throw a runtime exception
     return 0;
 }

@@ -14,6 +14,7 @@ class Parser;
 class PrefixParselet {
 public:
     virtual shared_ptr<Expr> parse(Parser& parser, Token &op) = 0;
+    virtual ~PrefixParselet() = default;
 };
 
 class InfixParselet {
@@ -24,11 +25,12 @@ public:
 //    precedence(prec), associativity(assoc){}
 
     virtual Precedence getPrecedence() = 0;
+    virtual ~InfixParselet() = default;
 };
 
 class PrefixOpParselet: public PrefixParselet {
 public:
-    PrefixOpParselet(Precedence prec): precedence(prec){}
+    explicit PrefixOpParselet(Precedence prec): precedence(prec){}
 
     shared_ptr<Expr> parse(Parser& parser, Token &op)override;
 protected:
@@ -59,6 +61,13 @@ public:
 };
 
 class ConditionalParselet: public InfixParselet {
+public:
+    shared_ptr<Expr> parse(Parser& parser, shared_ptr<Expr>& left, Token op) override;
+
+    Precedence getPrecedence() override;
+};
+
+class AssignParselet: public InfixParselet {
 public:
     shared_ptr<Expr> parse(Parser& parser, shared_ptr<Expr>& left, Token op) override;
 

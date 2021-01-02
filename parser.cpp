@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "token.h"
 #include "expr.h"
+#include "RuntimeException.h"
 #include <iostream>
 #include <string>
 
@@ -36,6 +37,7 @@ void Parser::loadParselets()
     record(TOKEN_ID, std::make_shared<VariableParselet>());
     record(TOKEN_LEFT_PAREN, std::make_shared<GroupingParselet>());
     record(TOKEN_QUESTION, std::make_shared<ConditionalParselet>());
+    record(TOKEN_ASSIGN, std::make_shared<AssignParselet>());
 
     prefix(TOKEN_PLUS, PREC_UNARY);
     prefix(TOKEN_MINUS, PREC_UNARY);
@@ -120,10 +122,12 @@ void Parser::infixRight(TokenType type, Precedence prec)
     infix(type, prec, RIGHT);
 }
 
-void Parser::error(Token token, std::string &&msg)
+void Parser::error(Token& token, std::string &&msg)
 {
-    std::cerr << msg << '\n';
+    auto final_msg = "\nat token '" + token.lexeme +"' " + msg + "\n";
+    std::cerr << final_msg;
     hasErr = true;
+    throw RuntimeException(final_msg);
 }
 
 Parser::Parser(std::vector<Token> &tokens):tokens(tokens) {

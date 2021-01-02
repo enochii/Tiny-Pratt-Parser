@@ -54,9 +54,11 @@ private:
                 case ')':
                     addToken(TOKEN_RIGHT_PAREN);break;
                 case '?':
-                    addToken(TOKEN_QUESTION);break;\
+                    addToken(TOKEN_QUESTION);break;
                 case ':':
                     addToken(TOKEN_COLON);break;
+                case '=':
+                    addToken(TOKEN_ASSIGN);break;
 
                 default:
                     if(isAlpha(c)) {

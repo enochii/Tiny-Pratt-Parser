@@ -21,6 +21,8 @@ public:
     shared_ptr<Expr> run();
 
     void consume(TokenType type, std::string &&msg);
+    void error(Token& token, std::string &&msg);
+
 private:
     void advance();
     bool match(TokenType type);
@@ -50,8 +52,6 @@ private:
 
     void record(TokenType type, shared_ptr<InfixParselet> &&parselet);
     void record(TokenType type, shared_ptr<PrefixParselet> &&parselet);
-
-    void error(Token token, std::string &&msg);
 
     void loadParselets();
     Precedence getCurrentPrecedence();

@@ -47,3 +47,17 @@ Precedence ConditionalParselet::getPrecedence() {
 shared_ptr<Expr> VariableParselet::parse(Parser &parser, Token &op) {
     return std::make_shared<Variable>(op);
 }
+
+shared_ptr<Expr> AssignParselet::parse(Parser &parser, shared_ptr<Expr> &left, Token op) {
+    shared_ptr<Variable> ptr = std::dynamic_pointer_cast<Variable>(left);
+    if(ptr == nullptr) {
+        parser.error(op, "left operand should be a variable");
+    }
+
+    auto right = parser.parsePrecedence(PREC_ASSIGN);
+    return std::make_shared<Assign>(ptr->var, right);
+}
+
+Precedence AssignParselet::getPrecedence() {
+    return PREC_ASSIGN;
+}
