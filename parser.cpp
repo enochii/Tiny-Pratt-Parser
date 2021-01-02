@@ -47,6 +47,7 @@ void Parser::loadParselets()
     infixLeft(TOKEN_MINUS, PREC_TERM);
     infixLeft(TOKEN_STAR, PREC_FACTOR);
     infixLeft(TOKEN_SLASH, PREC_FACTOR);
+    infixLeft(TOKEN_DOT, PREC_DOT);
 
     infixRight(TOKEN_CARET, PREC_EXPONENT);
 }
@@ -137,7 +138,6 @@ Parser::Parser(std::vector<Token> &tokens):tokens(tokens) {
 shared_ptr<Expr> Parser::run()
 {
     auto ast = parsePrecedence(PREC_ASSIGN);
-    auto* binary = (Binary*)ast.get();
     return ast;
 }
 
@@ -146,6 +146,7 @@ void Parser::record(TokenType type, shared_ptr<PrefixParselet> &parselet) {
 }
 
 Precedence Parser::getCurrentPrecedence() {
+    auto op = peek();
     auto it = infixes.find(peek().type);
     if(it != infixes.end()) {
         return it->second->getPrecedence();

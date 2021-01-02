@@ -59,14 +59,21 @@ private:
                     addToken(TOKEN_COLON);break;
                 case '=':
                     addToken(TOKEN_ASSIGN);break;
-
+                case '.':
+                    addToken(TOKEN_DOT);break;
+                case ' ':
+                case '\n':
+                case '\r':
+                case '\t':
+                    break;
                 default:
                     if(isAlpha(c)) {
                         identifier();
                     } else if(isDigit(c)){
                         number();
                     } else {
-
+                        std::cerr << "no such token " << c <<
+                        '\n';
                     }
                     break;
             }

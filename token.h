@@ -16,6 +16,7 @@ enum Precedence {
     PREC_FACTOR,
     PREC_EXPONENT,
     PREC_UNARY,
+    PREC_DOT,
 //    PREC_GROUPING
 };
 
@@ -36,6 +37,7 @@ enum TokenType {
     TOKEN_COLON,        // :
     TOKEN_LEFT_PAREN,   // (
     TOKEN_RIGHT_PAREN,  // )
+    TOKEN_DOT,          // .
     TOKEN_NUM,
     TOKEN_ID,
     TOKEN_EOF,
@@ -49,10 +51,6 @@ struct Token {
     Token(TokenType type, std::string&& s): type(type), lexeme(s)
     {}
 
-//    Token(TokenType type): type(type)
-//    {}
-
-    Token()=default;
 
     TokenType type;
     std::string lexeme;

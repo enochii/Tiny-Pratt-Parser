@@ -33,5 +33,8 @@ int main() {
 
     test("a = b = 3");
 //    test("a = 3 = 2"); // this one will throw a runtime exception
+
+    test("a.b.c");
+
     return 0;
 }
