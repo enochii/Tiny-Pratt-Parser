@@ -41,3 +41,6 @@ int main() {
 - [ ] more operator, e.g., assign, call `f(...)`, postfix operator... 
 - [ ] ~~no idea that how to make `Visitor` class as a template, then we can return some result...~~
 
+### Reference
+
+ http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/ 
