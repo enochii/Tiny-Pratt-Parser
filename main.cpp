@@ -32,7 +32,7 @@ int main() {
     test("a + b ? c * d : e / f");// "((+ a b) ? (* c d) : (/ e f))"
 
     test("a = b = 3");
-//    test("a = 3 = 2"); // this one will throw a runtime exception
+//    test("a = 3 = 2"); // this one will throw an exception
 
     test("a.b.c");
 

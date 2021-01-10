@@ -5,7 +5,7 @@
 #include "parser.h"
 #include "token.h"
 #include "expr.h"
-#include "RuntimeException.h"
+#include "parseException.h"
 #include <iostream>
 #include <string>
 
@@ -128,7 +128,7 @@ void Parser::error(Token& token, std::string &&msg)
     auto final_msg = "\nat token '" + token.lexeme +"' " + msg + "\n";
     std::cerr << final_msg;
     hasErr = true;
-    throw RuntimeException(final_msg);
+    throw parseException(final_msg);
 }
 
 Parser::Parser(std::vector<Token> &tokens):tokens(tokens) {
