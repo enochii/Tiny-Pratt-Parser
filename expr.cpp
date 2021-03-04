@@ -8,7 +8,7 @@
 Expr::~Expr() = default;
 
 shared_ptr<Any> Assign::accept(Visitor& v) {
-    v.visitAssign(*this);
+    return v.visitAssign(*this);
 }
 
 Assign::Assign(Token &name, shared_ptr<Expr> &newVal)
