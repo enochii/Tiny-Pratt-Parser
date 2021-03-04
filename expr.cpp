@@ -7,29 +7,29 @@
 
 Expr::~Expr() = default;
 
-void Assign::accept(Visitor& v) {
+shared_ptr<Any> Assign::accept(Visitor& v) {
     v.visitAssign(*this);
 }
 
 Assign::Assign(Token &name, shared_ptr<Expr> &newVal)
             :name(name), newVal(newVal) {}
 
-void Binary::accept(Visitor& v) {
+shared_ptr<Any> Binary::accept(Visitor& v) {
     return v.visitBinary(*this);
 }
 
 Binary::Binary(shared_ptr<Expr> &left, Token &op, shared_ptr<Expr> &right)
             :left(left), op(op), right(right){}
 
-void Unary::accept(Visitor& v) {
-    v.visitUnary(*this);
+shared_ptr<Any> Unary::accept(Visitor& v) {
+    return v.visitUnary(*this);
 }
 
 Unary::Unary(Token &op, shared_ptr<Expr> &expr)
             :op(op), expr(expr){}
 
-void Grouping::accept(Visitor& v) {
-    v.visitGrouping(*this);
+shared_ptr<Any> Grouping::accept(Visitor& v) {
+    return v.visitGrouping(*this);
 }
 
 Grouping::Grouping(shared_ptr<Expr> &expr)
@@ -37,21 +37,21 @@ Grouping::Grouping(shared_ptr<Expr> &expr)
 
 Number::Number(Token &token): token(token){}
 
-void Number::accept(Visitor& v) {
+shared_ptr<Any> Number::accept(Visitor& v) {
     return v.visitNumber(*this);
 }
 
-void Variable::accept(Visitor& v) {
-    v.visitVariable(*this);
+shared_ptr<Any> Variable::accept(Visitor& v) {
+    return v.visitVariable(*this);
 }
 
 Variable::Variable(Token &var)
             :var(var){}
 
-void Conditional::accept(Visitor &v) {
-    v.visitConditional(*this);
+shared_ptr<Any> Conditional::accept(Visitor &v) {
+    return v.visitConditional(*this);
 }
 
 Conditional::Conditional(shared_ptr<Expr> &cond, shared_ptr<Expr> &thenExpr, shared_ptr<Expr> &elseExpr)
-            :cond(cond), thenExpr(thenExpr), elseExpr(thenExpr){}
+            :cond(cond), thenExpr(thenExpr), elseExpr(elseExpr){}
 

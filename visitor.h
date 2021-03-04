@@ -6,15 +6,17 @@
 #define PRATTPARSER_VISITOR_H
 #include "expr.h"
 
+
 class Visitor {
+    using Res = shared_ptr<Any>;
 public:
-    virtual void visitAssign(Assign &expr) = 0;
-    virtual void visitBinary(Binary &expr) = 0;
-    virtual void visitUnary(Unary &expr) = 0;
-    virtual void visitGrouping(Grouping &expr) = 0;
-    virtual void visitNumber(Number &expr) = 0;
-    virtual void visitVariable(Variable &expr) = 0;
-    virtual void visitConditional(Conditional &expr) = 0;
+    virtual Res visitAssign(Assign &expr) = 0;
+    virtual Res visitBinary(Binary &expr) = 0;
+    virtual Res visitUnary(Unary &expr) = 0;
+    virtual Res visitGrouping(Grouping &expr) = 0;
+    virtual Res visitNumber(Number &expr) = 0;
+    virtual Res visitVariable(Variable &expr) = 0;
+    virtual Res visitConditional(Conditional &expr) = 0;
 };
 
 #endif //PRATTPARSER_VISITOR_H

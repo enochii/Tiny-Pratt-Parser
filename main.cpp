@@ -16,8 +16,8 @@ void test(string &&s)
 
     auto astprinter = ASTPrinter();
 
-    astprinter.stringify(ast);
-    cout << "\n";
+    string ret = astprinter.stringify(ast);
+    cout << ret << "\n";
 }
 
 int main() {
