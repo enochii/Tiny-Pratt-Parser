@@ -8,7 +8,7 @@
 
 
 class Visitor {
-    using Res = shared_ptr<Any>;
+    using Res = Any;
 public:
     virtual Res visitAssign(Assign &expr) = 0;
     virtual Res visitBinary(Binary &expr) = 0;

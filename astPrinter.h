@@ -11,32 +11,14 @@
 #include "visitor.h"
 #include "any.h"
 
-class Str: public Any {
-    std::string str;
-public:
-    // or we can implement operator<<, operator+ etc.
-//    operator std::string() {
-//        return str;
-//    }
-    std::string getStr() {
-        return str;
-    }
-    explicit Str(std::string s):str(std::move(s)) {}
-    explicit Str(std::string &&s):str(s) {}
-};
 
 class ASTPrinter: public Visitor {
-    using Res = shared_ptr<Any>;
+    using Res = Any;
 public:
-//    std::string stringify(Expr& expr)
-//    {
-//        return ((Str*)expr.accept(*this).get())->getStr();
-//    }
-
     std::string stringify(shared_ptr<Expr>& expr)
     {
-        return ((Str*)expr->accept(*this).get())->getStr();
-
+        Any a = expr->accept(*this);
+        return *a.get<std::string>();
     }
 
     Res visitAssign(Assign &expr) override {
@@ -45,7 +27,7 @@ public:
         ret += " ";
         ret += stringify(expr.newVal);
         ret += ")";
-        return std::make_shared<Str>(ret);
+        return Any(std::make_shared<std::string>(ret));
     }
 
     Res visitBinary(Binary &expr) override {
@@ -55,7 +37,7 @@ public:
         ret += " ";
         ret += stringify(expr.right);
         ret += ")";
-        return std::make_shared<Str>(ret);
+        return Any(std::make_shared<std::string>(ret));
     }
 
     Res visitUnary(Unary &expr) override {
@@ -63,7 +45,7 @@ public:
         ret += "(" + expr.op.lexeme + " ";
         ret += stringify(expr.expr);
         ret += ")";
-        return std::make_shared<Str>(ret);
+        return Any(std::make_shared<std::string>(ret));
     }
 
     Res visitGrouping(Grouping &expr) override {
@@ -71,19 +53,19 @@ public:
         ret += "(";
         ret += stringify(expr.expr);
         ret += ")";
-        return std::make_shared<Str>(ret);
+        return Any(std::make_shared<std::string>(ret));
     }
 
     Res visitNumber(Number &expr) override {
         std::string ret;
         ret += expr.token.lexeme;
-        return std::make_shared<Str>(ret);
+        return Any(std::make_shared<std::string>(ret));
     }
 
     Res visitVariable(Variable &expr) override {
         std::string ret;
         ret += expr.var.lexeme;
-        return std::make_shared<Str>(ret);
+        return Any(std::make_shared<std::string>(ret));
     }
 
     Res visitConditional(Conditional &expr) override {
@@ -95,7 +77,7 @@ public:
         ret += " : ";
         ret += stringify(expr.elseExpr);
         ret += ")";
-        return std::make_shared<Str>(ret);
+        return Any(std::make_shared<std::string>(ret));
     }
 };
 
